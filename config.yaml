@@ -1,0 +1,38 @@
+benchmark:
+  # Number of warm-up runs before timing (to exclude model load / JIT compile time)
+  warmup_runs: 1
+  # Number of timed runs per audio file per model
+  timed_runs: 3
+  # Audio sample rate expected by models (Hz)
+  sample_rate: 16000
+  # Output directory for results
+  output_dir: results
+
+models:
+  whisper:
+    # Choices: tiny, base, small, medium, large, large-v2, large-v3
+    size: base
+    # Device: auto | cpu | mps | cuda
+    device: auto
+    language: null          # null = auto-detect
+    fp16: false             # set true for cuda, false for mps/cpu
+
+  vibevoice:
+    # HuggingFace repo id for VibeVoice-ASR
+    model_id: "microsoft/VibeVoice-ASR"
+    # Device: auto | cpu | mps | cuda
+    device: auto
+    # torch dtype: float32 | float16 | bfloat16
+    torch_dtype: float32
+
+data:
+  samples_dir: data/samples
+  references_dir: data/references
+  # Supported audio extensions
+  extensions: [".wav", ".mp3", ".flac", ".m4a"]
+
+report:
+  # Output formats: console, json, html (comma-separated or list)
+  formats: [console, json, html]
+  # Show per-sample breakdown in console output
+  verbose: true

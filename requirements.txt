@@ -1,0 +1,26 @@
+# Core ML
+torch>=2.1.0
+openai-whisper>=20231117
+transformers>=4.40.0
+accelerate>=0.27.0
+
+# VibeVoice
+vibevoice>=0.1.0
+
+# Audio processing
+soundfile>=0.12.1
+librosa>=0.10.1
+
+# Metrics
+jiwer>=3.0.3
+
+# System profiling
+psutil>=5.9.0
+
+# CLI & output
+rich>=13.7.0
+PyYAML>=6.0.1
+
+# Visualization
+plotly>=5.18.0
+kaleido>=0.2.1
