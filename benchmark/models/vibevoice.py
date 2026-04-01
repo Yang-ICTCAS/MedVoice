@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Optional
 
 from .base import BaseModel
 
@@ -10,7 +9,7 @@ _DEFAULT_MODEL_ID = "microsoft/VibeVoice-ASR"
 
 
 class VibeVoiceModel(BaseModel):
-    """Microsoft VibeVoice-ASR wrapper via HuggingFace Transformers."""
+    """Microsoft VibeVoice-ASR wrapper using the official vibevoice package."""
 
     def __init__(
         self,
@@ -21,8 +20,8 @@ class VibeVoiceModel(BaseModel):
         super().__init__(device)
         self.model_id = model_id
         self.torch_dtype_str = torch_dtype
-        self._model = None
         self._processor = None
+        self._model = None
 
     @property
     def name(self) -> str:
@@ -30,7 +29,8 @@ class VibeVoiceModel(BaseModel):
 
     def load(self) -> None:
         import torch
-        from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
+        from vibevoice.modular import VibeVoiceASRForConditionalGeneration
+        from vibevoice.processor import VibeVoiceASRProcessor
 
         dtype_map = {
             "float32": torch.float32,
@@ -47,10 +47,17 @@ class VibeVoiceModel(BaseModel):
             )
             torch_dtype = torch.float32
 
-        self._processor = AutoProcessor.from_pretrained(self.model_id)
-        self._model = AutoModelForSpeechSeq2Seq.from_pretrained(
+        # Select attention implementation based on device
+        if self.device == "cuda":
+            attn_implementation = "sdpa"
+        else:
+            attn_implementation = "eager"
+
+        self._processor = VibeVoiceASRProcessor.from_pretrained(self.model_id)
+        self._model = VibeVoiceASRForConditionalGeneration.from_pretrained(
             self.model_id,
             torch_dtype=torch_dtype,
+            attn_implementation=attn_implementation,
             low_cpu_mem_usage=True,
         ).to(self.device)
         self._model.eval()

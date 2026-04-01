@@ -1,11 +1,14 @@
 # Core ML
 torch>=2.1.0
 openai-whisper>=20231117
-transformers>=4.40.0
+# transformers pinned below by vibevoice requirement
 accelerate>=0.27.0
 
-# VibeVoice
-vibevoice>=0.1.0
+# VibeVoice (install directly from GitHub — not on PyPI)
+vibevoice @ git+https://github.com/microsoft/VibeVoice.git
+
+# VibeVoice requires transformers 4.51.3
+transformers==4.51.3
 
 # Audio processing
 soundfile>=0.12.1
